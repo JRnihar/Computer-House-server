@@ -21,12 +21,26 @@ async function run() {
     try {
         await client.connect();
         const partsCollection = client.db('computerParts').collection('Cparts')
+        const reviewCollection = client.db('computerParts').collection('Review')
         //get
         app.get('/part', async (req, res) => {
             const query = {};
             const cursor = partsCollection.find(query)
             const user = await cursor.toArray()
             res.send(user)
+        })
+        app.get('/review', async (req, res) => {
+            const query = {};
+            const cursor = reviewCollection.find(query)
+            const user = await cursor.toArray()
+            res.send(user)
+        })
+        
+        app.post('/review', async (req, res) => {
+            const newProduct = req.body
+            console.log(newProduct);
+            const result = await reviewCollection .insertOne(newProduct)
+            res.send(result)
         })
 
         app.get('/part/:id', async (req, res) => {
