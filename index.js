@@ -23,6 +23,8 @@ async function run() {
         const partsCollection = client.db('computerParts').collection('Cparts')
         const reviewCollection = client.db('computerParts').collection('Review')
         const orderCollection = client.db('computerParts').collection('order')
+        const usersCollection = client.db('computerParts').collection('users')
+        const profileCollection = client.db('computerParts').collection('profile')
         //get
         app.get('/part', async (req, res) => {
             const query = {};
@@ -105,6 +107,71 @@ async function run() {
             const result = await orderCollection.deleteOne(query)
             res.send(result)
         })
+
+        app.get('/user',  async (req, res) => {
+            const users = await usersCollection.find().toArray();
+            res.send(users);
+        });
+        app.get('/admin/:email', async (req, res) => {
+            const email = req.params.email;
+            const user = await usersCollection.findOne({ email: email });
+            const isAdmin = user.role === 'admin';
+            res.send({ admin: isAdmin })
+        })
+        app.put('/user/:email', async (req, res) => {
+            const email = req.params.email;
+            const user = req.body;
+            const filter = { email: email };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: user,
+            };
+            const result = await usersCollection.updateOne(filter, updateDoc, options);
+            
+            res.send({ result });
+        });
+        app.put('/user/admin/:email', async (req, res) => {
+            const email = req.params.email;
+            const filter = { email: email };
+            const updateDoc = {
+                $set: { role: 'admin' },
+            };
+            const result = await usersCollection.updateOne(filter, updateDoc);
+            res.send(result);
+        })
+        
+        app.post('/myprofile', async (req, res) => {
+            const newService = req.body;
+            const result = await profileCollection.insertOne(newService);
+            res.send(result);
+        });
+
+        // ///////// query by email for my profile ///////////
+
+        app.get("/myprofile/:email", async (req, res) => {
+            const email = req.params;
+            const cursor = profileCollection.find(email)
+            const products = await cursor.toArray()
+            res.send(products)
+        });
+
+        // /////////// data update //////////
+        app.put('/myprofile/:id', async (req, res) => {
+            const id = req.params.id;
+            const updatUser = req.body;
+            const filter = { _id: ObjectId(id) }
+            const option = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    education: updatUser.education,
+                    city: updatUser.city,
+                    phone: updatUser.phone
+
+                }
+            };
+            const result = await profileCollection.updateOne(filter, updateDoc, option)
+            res.send(result);
+        });
         
     } finally {
 
