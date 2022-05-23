@@ -32,6 +32,12 @@ async function run() {
             const user = await cursor.toArray()
             res.send(user)
         })
+        app.post('/part', async (req, res) => {
+            const newProduct = req.body
+            // console.log(newProduct);
+            const result = await partsCollection.insertOne(newProduct)
+            res.send(result)
+        })
         app.get('/review', async (req, res) => {
             const query = {};
             const cursor = reviewCollection.find(query)
@@ -41,7 +47,7 @@ async function run() {
         
         app.post('/review', async (req, res) => {
             const newProduct = req.body
-            console.log(newProduct);
+            // console.log(newProduct);
             const result = await reviewCollection .insertOne(newProduct)
             res.send(result)
         })
@@ -56,7 +62,7 @@ async function run() {
         app.put('/part/:id', async (req, res) => {
             const id = req.params.id;
             const updatUser = req.body;
-            console.log(updatUser);
+            // console.log(updatUser);
             const filter = { _id: ObjectId(id) }
             const option = { upsert: true };
             const updateDoc = {
