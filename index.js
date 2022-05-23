@@ -22,6 +22,7 @@ async function run() {
         await client.connect();
         const partsCollection = client.db('computerParts').collection('Cparts')
         const reviewCollection = client.db('computerParts').collection('Review')
+        const orderCollection = client.db('computerParts').collection('order')
         //get
         app.get('/part', async (req, res) => {
             const query = {};
@@ -72,6 +73,38 @@ async function run() {
         //     const result = await partsCollection.insertOne(newService);
         //     res.send(result);
         // });
+
+       
+        app.get('/addItem', async (req, res) => {
+            const query = {}
+            const cursor = orderCollection.find(query)
+            const result = await cursor.toArray()
+            res.send(result)
+        });
+
+        // insert new product
+        app.post('/addItem', async (req, res) => {
+            const newService = req.body;
+            const result = await orderCollection.insertOne(newService);
+            res.send(result);
+        });
+
+        // query by email
+        app.get("/myorder/:email", async (req, res) => {
+            const email = req.params;
+            const cursor = orderCollection.find(email)
+            const products = await cursor.toArray()
+            res.send(products)
+        });
+
+        // delete part
+
+        app.delete('/myorder/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await orderCollection.deleteOne(query)
+            res.send(result)
+        })
         
     } finally {
 
