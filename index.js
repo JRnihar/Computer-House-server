@@ -32,6 +32,12 @@ async function run() {
             const user = await cursor.toArray()
             res.send(user)
         })
+        app.delete('/part/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await partsCollection.deleteOne(query)
+            res.send(result)
+        })
         app.post('/part', async (req, res) => {
             const newProduct = req.body
             // console.log(newProduct);
