@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-// const jwt = require('jsonwebtoken');
+
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 const cors = require('cors');
@@ -40,7 +40,7 @@ async function run() {
         })
         app.post('/part', async (req, res) => {
             const newProduct = req.body
-            // console.log(newProduct);
+            
             const result = await partsCollection.insertOne(newProduct)
             res.send(result)
         })
@@ -81,12 +81,7 @@ async function run() {
             const result = await partsCollection.updateOne(filter, updateDoc, option)
             res.send(result);
         });
-        // app.post('/addItem', async (req, res) => {
-        //     const newService = req.body;
-        //     console.log(newService);
-        //     const result = await partsCollection.insertOne(newService);
-        //     res.send(result);
-        // });
+      
 
        
         app.get('/addItem', async (req, res) => {
