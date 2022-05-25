@@ -53,7 +53,7 @@ async function run() {
         
         app.post('/review', async (req, res) => {
             const newProduct = req.body
-            // console.log(newProduct);
+         
             const result = await reviewCollection .insertOne(newProduct)
             res.send(result)
         })
@@ -68,7 +68,7 @@ async function run() {
         app.put('/part/:id', async (req, res) => {
             const id = req.params.id;
             const updatUser = req.body;
-            // console.log(updatUser);
+           
             const filter = { _id: ObjectId(id) }
             const option = { upsert: true };
             const updateDoc = {
@@ -91,14 +91,14 @@ async function run() {
             res.send(result)
         });
 
-        // insert new product
+  
         app.post('/addItem', async (req, res) => {
             const newService = req.body;
             const result = await orderCollection.insertOne(newService);
             res.send(result);
         });
 
-        // query by email
+ 
         app.get("/myorder/:email", async (req, res) => {
             const email = req.params;
             const cursor = orderCollection.find(email)
@@ -106,7 +106,7 @@ async function run() {
             res.send(products)
         });
 
-        // delete part
+
 
         app.delete('/myorder/:id', async (req, res) => {
             const id = req.params.id;
@@ -153,7 +153,7 @@ async function run() {
             res.send(result);
         });
 
-        // ///////// query by email for my profile ///////////
+       
 
         app.get("/myprofile/:email", async (req, res) => {
             const email = req.params;
