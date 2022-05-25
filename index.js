@@ -32,6 +32,7 @@ async function run() {
             const user = await cursor.toArray()
             res.send(user)
         })
+        //delete
         app.delete('/part/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) }
@@ -162,7 +163,6 @@ async function run() {
             res.send(products)
         });
 
-        // /////////// data update //////////
         app.put('/myprofile/:id', async (req, res) => {
             const id = req.params.id;
             const updatUser = req.body;
